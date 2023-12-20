@@ -2,13 +2,13 @@
 
 	class Nuoroda extends ModelDbIrasas {
 	
-		public $id, $nuoroda, $pav, $kategorijos;
+		public $id, $nuoroda, $pav, $kategorijos, $aprasymas;
 		
-		public function __construct( $nuoroda, $pav, $kategorijos ) {
+		public function __construct( $nuoroda, $pav,  $aprasymas ) {
 		
 			$this -> nuoroda = $nuoroda;
 			$this -> pav = $pav;
-			$this -> kategorijos = $kategorijos;
+			$this -> aprasymas = $aprasymas;
 		
 			parent::__construct();
 		}
@@ -39,9 +39,10 @@
 			
 			$uzklausa =
 "
-				INSERT INTO `nuorodos` ( `nuoroda`, `pav` ) VALUES(
+				INSERT INTO `nuorodos` ( `nuoroda`, `pav`, `aprasymas` ) VALUES(
 					'" . $this -> nuoroda . "'
 					, '" . $this -> pav . "'
+					, '". $this-> aprasymas . "'
 				)
 					";
 																														// echo $uzklausa;
