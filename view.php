@@ -117,6 +117,14 @@
 					}
 				});
 			});
+			
+			$( '.kat_keisk' ).each( function() {
+			
+				$( this ).click( function() {
+				
+					$(  '#result' ).html( $( this ).data( 'kategorija' ) +', ' + $( this ).data( 'id_kategorijos' ) );
+				});
+			});
 		});
        </script>
 </head>
@@ -144,7 +152,7 @@
 ?>	 
 	<li>
 		<input type="checkbox" form="naujos_nuorodos_forma" name="kategorijax[]" value="<?= $kategorija [ 'id' ] ?>"  id="k<?= $kategorija [ 'id' ] ?>" class="kat_parink">
-		<input type="button" value="&#9998;">
+		<input type="button" value="&#9998;" data-kategorija="<?= $kategorija [ 'pav' ] ?>" data-id_kategorijos="<?= $kategorija [ 'id' ] ?>"  class="kat_keisk">
 		<input type="button" value="&#10008;">
 		<a href="?ikat=<?= $kategorija [ 'id' ] ?>">
 			<?= $kategorija [ 'pav' ] ?>
