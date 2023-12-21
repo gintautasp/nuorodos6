@@ -38,9 +38,91 @@
 		.privaloma {
 			color: red;
 		}
+		#result {
+			display: none;
+		}
+		#pranesimai {
+			width: auto;
+		}
+<?php
+
+	if ( ! $nuorodu_katalogas -> arPasirinktaKategorija() ) {
+?>
+		#nauja_nuoroda {
+			display: none;
+		}
+<?php
+	}
+?>
        </style>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+       <script>
+		$( document ).ready( function() {
+		
+			$( '.redaguoti_nuoroda' ).each ( function() {
+			
+				$( this ).click ( function() {
+				
+					if ( id = $( this ).data( 'id' ) ) {
+																													// alert ( 'pasirinkta nuoroda id: ' +  id );
+						$.get( '?g1n=' + id, function( data ) {
+																													// $(  '#result' ).html ( data );
+						
+							nuoroda = JSON.parse ( data );
+						
+							$( '#nuoroda' ).val( nuoroda.nuoroda );
+							$( '#pav' ).val( nuoroda.pav);
+							$( '#aprasymas' ).html( nuoroda.aprasymas );
+							$( '#id_nuorodos' ).val( nuoroda.id );
+							
+							kategoriju_id = nuoroda.id_kategoriju.split ( ',' );
+							
+							$( '.kat_parink' ).each ( function() {
+							
+								$(  '#result' ).html( $(  '#result' ).html() +',' + $( this ).val() );
+							
+								$( '#k'+ $( this ).val() ).prop ( 'checked', false ); 													// .removeAttr( 'checked' ); 
+								// @TO_DO nuima checked reikšmę, bet nenuima rodyme 
+								
+								$(  '#result' ).html( $(  '#result' ).html() +',' + $( '#k'+ $( this ).val() ).prop ( 'checked' ) );
+							});
+							
+							for ( i = 0; i< kategoriju_id.length; i++ ) {
+								
+								$( '#k' + kategoriju_id [ i ] ).prop ( 'checked', true );
+							}
+
+							$( '#nauja_nuoroda' ).show();																							
+						});
+					}
+				});
+			});
+			
+			$( '#pranesimai' ).click( function() {
+			
+				$( '#result' ).toggle();
+			});
+			
+			$( '.salinti_nuoroda' ).each ( function() {
+			
+				$( this ).click ( function() {
+				
+					if ( confirm( "Ar tikrai norite pašalinti nuorodą" ) == true) {
+				
+						if ( id = $( this ).data( 'id' ) ) {
+						
+							$( '#id_salinamos_nuorodos' ).val ( id );
+							$( '#salinamos_nuorodos_forma' ).submit();
+						}
+					}
+				});
+			});
+		});
+       </script>
 </head>
 <body>
+<input type="button" value="Pranešimai" id="pranesimai">
+<div id="result">
 <?php
 
 	foreach ( $nuorodu_katalogas -> pranesimai as $pranesimas ) {
@@ -53,13 +135,21 @@
 		echo 'kategorija nr.: ' . $nuorodu_katalogas -> id_kategorijos;
 	}
 ?>
+</div>
 <div id="kategorijos">
 <ul>
 <?php
 	 
 	 foreach ( $nuorodu_katalogas ->  kategorijos -> sarasas as $kategorija ) {
 ?>	 
-	<li><input type="checkbox" form="naujos_nuorodos_forma" name="kategorijax[]" value="<?= $kategorija [ 'id' ] ?>"><input type="button" value="&#9998;"><input type="button" value="&#10008;"><a href="?ikat=<?= $kategorija [ 'id' ] ?>"><?= $kategorija [ 'pav' ] ?></a></li>
+	<li>
+		<input type="checkbox" form="naujos_nuorodos_forma" name="kategorijax[]" value="<?= $kategorija [ 'id' ] ?>"  id="k<?= $kategorija [ 'id' ] ?>" class="kat_parink">
+		<input type="button" value="&#9998;">
+		<input type="button" value="&#10008;">
+		<a href="?ikat=<?= $kategorija [ 'id' ] ?>">
+			<?= $kategorija [ 'pav' ] ?>
+		</a>
+	</li>
 <?php	 
 	 }
 ?>	
@@ -78,15 +168,17 @@
 	 
 	 foreach ( $nuorodu_katalogas ->  nuorodos -> sarasas as $nuoroda ) {
 ?>
-	<li><input type="button" value="&#9998;"><input type="button" value="&#10008;"><a href="<?= $nuoroda [ 'nuoroda' ] ?>" title="<?= $nuoroda [ 'aprasymas' ] ?>"><?= $nuoroda [ 'pav' ] ?></a></li>
+	<li>
+		<input type="button" class="redaguoti_nuoroda" data-id="<?= $nuoroda [ 'id' ] ?>" value="&#9998;">
+		<input type="button" class="salinti_nuoroda" data-id="<?= $nuoroda [ 'id' ] ?>" value="&#10008;">
+		<a href="<?= $nuoroda [ 'nuoroda' ] ?>" title="<?= $nuoroda [ 'aprasymas' ] ?>" target="_blank">
+			<?= $nuoroda [ 'pav' ] ?>
+		</a>
+	</li>
 <?php	 
 	 }
 ?>
 </ul>
-<?php
-
-	if ( $nuorodu_katalogas -> arPasirinktaKategorija() ) {
-?>
 <div id="nauja_nuoroda">
 	<form method="POST" action="" id="naujos_nuorodos_forma">
 		<label><span class="privaloma">*</span>Nuoroda</label>
@@ -94,12 +186,14 @@
 		<label>Pavadinimas</label>
 		<input type="text" name="pav" id="pav">
 		<label>Aprašymas</label>
-		<textarea name="aprasymas" id="aprasymas"></textarea>		
+		<textarea name="aprasymas" id="aprasymas"></textarea>
+		<input type="hidden" id="id_nuorodos" name="id_nuorodos" value="0">
 		<input type="submit" name="saugoti" value="išsaugoti">
 	</form>		
 </div>
-<?php
-	}
-?>
+<form method="POST" action="" id="salinamos_nuorodos_forma">
+	<input type="hidden" id="id_salinamos_nuorodos" name="id_salinamos_nuorodos" value="0">
+	<input type="hidden" name="salinti" value="šalinti">
+</form>
 </body>
 </html> 

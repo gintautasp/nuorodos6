@@ -11,6 +11,13 @@
 
 	$db = new DuomenuBaze ( $conf [ 'name_db' ], $conf [ 'name_user_db' ], $conf [ 'password_user_db' ] );
 	
+	if ( isset ( $_GET [ 'g1n' ] ) && ( $id_nuorodos =  $_GET [ 'g1n' ] ) ) {
+	
+		include 'gauti-nuoroda.php';
+
+		die;
+	}
+	
 	include $conf [ 'dir_bendra' ] . 'controller.class.php';
 	include $main_dir . 'class/nuorodu_katalogas.php';
 	include $main_dir . 'class/kategorija.php';	

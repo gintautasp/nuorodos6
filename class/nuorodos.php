@@ -28,6 +28,7 @@
 					"
 				SELECT 
 					`nuorodos`.*
+					, GROUP_CONCAT( `kategorijos`.`id`) AS `id_kategoriju`
 				FROM 
 					`nuorodos`
 				LEFT JOIN 
@@ -37,7 +38,7 @@
 				LEFT JOIN `kategorijos` ON (
 						`nuorodos_kategorijos`.`id_kategorijos`=`kategorijos`.`id`
 					)
-				WHERE 
+				WHERE
 						1
 					";
 			

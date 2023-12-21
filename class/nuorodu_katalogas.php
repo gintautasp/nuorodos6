@@ -32,7 +32,7 @@
 			
 			$saugoti = false;
 		
-			if ( isset ( $_POST [ 'saugoti' ] ) && ( $_POST [ 'saugoti' ] =="išsaugoti" ) ) {
+			if ( isset ( $_POST [ 'saugoti' ] ) && ( $_POST [ 'saugoti' ] =="išsaugoti" ) && ( $_POST [ 'id_nuorodos' ] =="0" ) ) {
 			
 				$saugoti = true;
 																														//	echo 'saugoti';
@@ -89,20 +89,72 @@
 
 		public function arKoreguojamaNuoroda() {
 		
-			return false;
+			$saugoti = false;
+		
+			if ( isset ( $_POST [ 'saugoti' ] ) && ( $_POST [ 'saugoti' ] =="išsaugoti" ) && ( intval ( $_POST [ 'id_nuorodos' ] ) > 0 ) ) {
+			
+				$saugoti = true;
+																													//	echo 'saugoti';
+			}
+			return $saugoti;
 		}
 		
 		public function koreguotiNuoroda() {
+		
+			if ( isset ( $_POST [ 'nuoroda' ] ) &&  ( $_POST [ 'nuoroda' ] != '' ) && ( strlen (  $_POST [ 'nuoroda' ] ) > 2 ) ) {
+		
+				$nuoroda = new Nuoroda( $_POST [ 'nuoroda' ], $_POST [ 'pav' ], $_POST [ 'aprasymas' ], intval ( $_POST [ 'id_nuorodos' ] ) );
+				
+				$this -> pranesimai[] = 'nuoroda saugoma ..';
 
+				 $nuoroda ->  issaugotiDuomenuBazeje();
+				 
+				$this -> pranesimai[] = 'nuoroda išsaugota, nuorodos id: ' . $nuoroda -> id;
+
+				if ( $nuoroda -> id > 0 ) {
+				
+					if ( isset ( $_POST [ 'kategorijax' ] ) ) {
+				
+						$kategorijos = $_POST [ 'kategorijax' ];
+						
+					} else {
+					
+						$kategorijos = array();
+					}
+
+					$this -> pranesimai[] = 'saugomos nuorodos kategorijos ..';
+				
+					$nuorodos_kategorijos = new NuorodosKategorijos ( $nuoroda -> id, $kategorijos );
+					
+					 $nuorodos_kategorijos -> issaugotiDuomenuBazeje();
+					 
+					$this -> pranesimai[] = 'nuorodos kategorijos išsaugotos';						 
+				}
+			}
 		}
 		
 		public function arSalinamaNuoroda() {
 		
-			return false;
+			$salinti = false;
+		
+			if ( isset ( $_POST [ 'salinti' ] ) && ( $_POST [ 'salinti' ] =="šalinti" ) && ( intval ( $_POST [ 'id_salinamos_nuorodos' ] ) > 0 ) ) {
+			
+				$salinti = true;
+			}
+			return $salinti;
 		}
 	
 		public function salintiNuoroda() {
-
+		
+			$nuoroda = new Nuoroda();
+			
+			$id_salinamos_nuorodos = intval ( $_POST [ 'id_salinamos_nuorodos' ] );
+			
+			$nuorodos_kategorijos = new NuorodosKategorijos ( $id_salinamos_nuorodos, array() );
+			
+			$nuorodos_kategorijos -> salinti();
+			
+			$nuoroda -> salinti ( $id_salinamos_nuorodos );
 		}
 		
 		public function gautiDuomenis() {

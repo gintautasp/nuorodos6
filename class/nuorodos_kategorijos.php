@@ -14,6 +14,8 @@
 		
 		public function issaugotiDuomenuBazeje() {
 		
+			$this -> salinti();
+			
 			$glue =  '), (' . $this -> id_nuorodos . ', ';
 																														// echo '-:' . $glue . ':<BR>';
 			$uzklausa =
@@ -22,6 +24,19 @@
 
 					" . $this -> id_nuorodos . ', ' . implode ( $glue,  $this -> id_kategoriju ) . "
 				)
+					";
+																														//  echo $uzklausa;
+			$this -> db -> uzklausa ( $uzklausa );
+		}
+		
+		public function salinti() {
+
+			$uzklausa =
+					"
+				DELETE  FROM 
+					`nuorodos_kategorijos` 
+				WHERE 
+					`id_nuorodos`=" . $this -> id_nuorodos . "
 					";
 																														//  echo $uzklausa;
 			$this -> db -> uzklausa ( $uzklausa );
