@@ -4,10 +4,11 @@
 	
 		public $id, $pav;    																	// čia reiktu pasipildyti !
 
-		public function __construct( $kategorija ) {
+		public function __construct( $kategorija, $id = 0 ) {
 		
 			parent::__construct();
 			$this -> pav = $kategorija;
+			$this -> id = $id;
 		}
 																					// sukurti reikalingu metodu antrastes
 		public function arYraTokiaKategorija () {
@@ -34,15 +35,30 @@
 																					
 		public function issaugotiDuomenuBazeje() {
 			
-			$uzklausa =
-"
-				INSERT INTO `kategorijos` (  `pav` ) VALUES(
-					'" . $this -> pav . "'
-				)
-					";
-																														// echo $uzklausa;
-			$this -> db -> uzklausa ( $uzklausa, 'last_insert_id' );
+			if ( $this -> id == 0 ) {			
+			
+				$uzklausa =
+						"
+					INSERT INTO `kategorijos` (  `pav` ) VALUES(
+						'" . $this -> pav . "'
+					)
+						";
+																															// echo $uzklausa;
+				$this -> db -> uzklausa ( $uzklausa, 'last_insert_id' );
 
-			$this -> id = $this -> db -> last_insert_id;		
+				$this -> id = $this -> db -> last_insert_id;	
+				
+			} else {
+			
+				$uzklausa =
+						"
+					UPDATE `kategorijos` SET
+						`pav`= '" . $this -> pav . "'
+					WHERE
+						`id`= " . $this -> id . "
+						";
+																															// echo $uzklausa;
+				$this -> db -> uzklausa ( $uzklausa, 'afected_rows' );				
+			}
 		}
 	}

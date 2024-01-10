@@ -94,7 +94,7 @@
 						`id`= " . $this -> id . "
 						";
 																															// echo $uzklausa;
-				$this -> db -> uzklausa ( $uzklausa, 'last_insert_id' );		
+				$this -> db -> uzklausa ( $uzklausa, 'afected_rows' );		
 			}
 		}
 		

@@ -122,7 +122,12 @@
 			
 				$( this ).click( function() {
 				
-					$(  '#result' ).html( $( this ).data( 'kategorija' ) +', ' + $( this ).data( 'id_kategorijos' ) );
+					// $(  '#result' ).html( $( this ).data( 'kategorija' ) +', ' + $( this ).data( 'id_kategorijos' ) );
+					
+					$( '#id_kategorijos' ).val (  $( this ).data( 'id_kategorijos' ) );
+					$( '#kategorija' ).val (  $( this ).data( 'kategorija' ) );
+					$( '#kategorijos_veiksmo_pavadinimas' ).html ( 'Pervardinama kategorija' );
+					$( '#kategorijos_saugojimas ' ).val ( 'pakeisti' );
 				});
 			});
 		});
@@ -164,9 +169,10 @@
 </ul>
 <div id="nauja_kategorija">
 	<form method="POST" action="">
-		<label for="kategorija"><span class="privaloma">*</span>Nauja kategorija</label>
+		<label for="kategorija"><span class="privaloma">*</span><span id="kategorijos_veiksmo_pavadinimas">Nauja kategorija</span></label>
 		<input type="text" name="kategorija" id="kategorija">
-		<input type="submit" name="sukurti" value="sukurti">
+		<input type="hidden" name="id_kategorijos" id="id_kategorijos" value="0">		
+		<input type="submit" id="kategorijos_saugojimas" name="sukurti" value="sukurti">
 	</form>		
 </div>
 </div>

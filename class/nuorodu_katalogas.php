@@ -210,12 +210,30 @@
 		}
 
 		public function arKoreguotiKategorija() {
+		
+			$saugoti = false;
+		
+			if ( isset ( $_POST [ 'sukurti' ] ) && ( $_POST [ 'sukurti' ] =="pakeisti" ) && ( intval ( $_POST [ 'id_kategorijos' ] ) > 0 ) ) {
 			
-			return false;
+				$saugoti = true;
+																												//	echo 'saugoti';
+			}
+			return $saugoti;
 		}
 	
 		public function koreguotiKategorija() {
 		
+			if ( isset ( $_POST [ 'kategorija' ] ) &&  ( $_POST [ 'kategorija' ] != '' ) && ( strlen (  $_POST [ 'kategorija' ] ) > 2 ) ) {
+
+				$kategorija = new Kategorija ( $_POST [ 'kategorija' ],  intval ( $_POST [ 'id_kategorijos' ] ) );
+				
+				$this -> pranesimai[] = 'kategorija saugoma ..';
+
+				 $kategorija ->  issaugotiDuomenuBazeje();
+				 
+				$this -> pranesimai[] = 'kategorija išsaugota, kategorijos id: ' . $kategorija -> id;
+
+			}
 		}
 		
 		public function  arSalintiKategorija() {
