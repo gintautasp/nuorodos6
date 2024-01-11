@@ -2,7 +2,7 @@
 
 	class Nuorodos extends ModelDbSarasas {
 	
-		public $paieskos_tekstas = '', $ieskoti_pagal = array(), $kategorijos_id = 0;
+		public $paieskos_tekstas = '', $ieskoti_pagal = array(), $kategorijos_id = -1;
 		
 		public function __construct() {
 		
@@ -49,6 +49,13 @@
 					AND
 						`nuorodos_kategorijos`.`id_kategorijos`=" . $this -> kategorijos_id . "
 					";
+			} elseif  ( $this -> kategorijos_id == 0 ) {
+			
+				$uzklausa .= 
+					"
+					AND
+						`nuorodos_kategorijos`.`id_kategorijos`  IS NULL
+					";			
 			}
 			
 			if ( ( $this -> paieskos_tekstas != '' ) && ( $this -> ieskoti_pagal ) ) {

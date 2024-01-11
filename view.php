@@ -16,7 +16,7 @@
 			width: 50px;
 			margin: 7px;
 		}
-		input[type=submit] {
+		input[type=submit], input[type=reset] {
 			width: 120px;		
 			margin: 7px;
 			float: right;
@@ -46,7 +46,7 @@
 		}
 <?php
 
-	if ( ! $nuorodu_katalogas -> arPasirinktaKategorija() ) {
+	if ( ! $nuorodu_katalogas -> arPasirinktaEgzistuojantiKategorija() ) {
 ?>
 		#nauja_nuoroda {
 			display: none;
@@ -118,18 +118,41 @@
 				});
 			});
 			
+			$( '.salinti_kategorija' ).each ( function() {
+			
+				$( this ).click ( function() {
+				
+					if ( confirm( "Ar tikrai norite pašalinti kategoriją" ) == true) {
+				
+						if ( id_kategorijos = $( this ).data( 'id_kategorijos' ) ) {
+						
+							$( '#id_salinamos_kategorijos' ).val ( id_kategorijos );
+							$( '#salinamos_kategorijos_forma' ).submit();
+						}
+					}
+				});
+			});			
+			
 			$( '.kat_keisk' ).each( function() {
 			
 				$( this ).click( function() {
-				
-					// $(  '#result' ).html( $( this ).data( 'kategorija' ) +', ' + $( this ).data( 'id_kategorijos' ) );
-					
+																									// $(  '#result' ).html( $( this ).data( 'kategorija' ) +', ' + $( this ).data( 'id_kategorijos' ) );
 					$( '#id_kategorijos' ).val (  $( this ).data( 'id_kategorijos' ) );
 					$( '#kategorija' ).val (  $( this ).data( 'kategorija' ) );
 					$( '#kategorijos_veiksmo_pavadinimas' ).html ( 'Pervardinama kategorija' );
 					$( '#kategorijos_saugojimas ' ).val ( 'pakeisti' );
 				});
 			});
+			
+			$( '#atsaukti_nuorodos_redagavima' ).click( function() {
+			
+				$( '#id_nuorodos' ).val ( '0' );
+			});
+			
+			$( '#atsaukti_kategorijos_redagavima' ).click( function() {
+			
+				$( '#id_kategorijos' ).val ( '0' );
+			});			
 		});
        </script>
 </head>
@@ -151,6 +174,14 @@
 </div>
 <div id="kategorijos">
 <ul>
+	<li>
+		<input type="checkbox" form="naujos_nuorodos_forma" name="kategorijax[]" value="<?= $kategorija [ 'id' ] ?>"  id="k<?= $kategorija [ 'id' ] ?>" class="kat_parink" disabled>
+		<input type="button" value="&#9998;" data-kategorija="<?= $kategorija [ 'pav' ] ?>" data-id_kategorijos="<?= $kategorija [ 'id' ] ?>"  class="kat_keisk" disabled>
+		<input type="button" value="&#10008;"  class="salinti_kategorija"  data-id_kategorijos="<?= $kategorija [ 'id' ] ?>" disabled>
+		<a href="?ikat=0">
+			Be kategorijos
+		</a>
+	</li>	
 <?php
 	 
 	 foreach ( $nuorodu_katalogas ->  kategorijos -> sarasas as $kategorija ) {
@@ -158,7 +189,7 @@
 	<li>
 		<input type="checkbox" form="naujos_nuorodos_forma" name="kategorijax[]" value="<?= $kategorija [ 'id' ] ?>"  id="k<?= $kategorija [ 'id' ] ?>" class="kat_parink">
 		<input type="button" value="&#9998;" data-kategorija="<?= $kategorija [ 'pav' ] ?>" data-id_kategorijos="<?= $kategorija [ 'id' ] ?>"  class="kat_keisk">
-		<input type="button" value="&#10008;">
+		<input type="button" value="&#10008;"  class="salinti_kategorija"  data-id_kategorijos="<?= $kategorija [ 'id' ] ?>">
 		<a href="?ikat=<?= $kategorija [ 'id' ] ?>">
 			<?= $kategorija [ 'pav' ] ?>
 		</a>
@@ -171,8 +202,9 @@
 	<form method="POST" action="">
 		<label for="kategorija"><span class="privaloma">*</span><span id="kategorijos_veiksmo_pavadinimas">Nauja kategorija</span></label>
 		<input type="text" name="kategorija" id="kategorija">
-		<input type="hidden" name="id_kategorijos" id="id_kategorijos" value="0">		
+		<input type="hidden" name="id_kategorijos" id="id_kategorijos" value="0">
 		<input type="submit" id="kategorijos_saugojimas" name="sukurti" value="sukurti">
+		<input type="reset" id="atsaukti_kategorijos_redagavima" name="atsaukti_kategorija" value="atšaukti">		
 	</form>		
 </div>
 </div>
@@ -203,11 +235,16 @@
 		<textarea name="aprasymas" id="aprasymas"></textarea>
 		<input type="hidden" id="id_nuorodos" name="id_nuorodos" value="0">
 		<input type="submit" name="saugoti" value="išsaugoti">
-	</form>		
+		<input type="reset" id="atsaukti_nuorodos_redagavima" name="atsaukti" value="atšaukti">
+ 	</form>		
 </div>
 <form method="POST" action="" id="salinamos_nuorodos_forma">
 	<input type="hidden" id="id_salinamos_nuorodos" name="id_salinamos_nuorodos" value="0">
 	<input type="hidden" name="salinti" value="šalinti">
+</form>
+<form method="POST" action="" id="salinamos_kategorijos_forma">
+	<input type="hidden" id="id_salinamos_kategorijos" name="id_salinamos_kategorijos" value="0">
+	<input type="hidden" name="naikinti" value="šalinti">
 </form>
 </body>
 </html> 

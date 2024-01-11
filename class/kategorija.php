@@ -61,4 +61,17 @@
 				$this -> db -> uzklausa ( $uzklausa, 'afected_rows' );				
 			}
 		}
+		
+		public function salinti( $id ) {
+		
+			$uzklausa =
+					"
+				DELETE FROM 
+					`kategorijos` 
+				WHERE
+					`id`= " . $id . "
+					";
+																														// echo $uzklausa;
+			$this -> db -> uzklausa ( $uzklausa, 'last_insert_id' );
+		}		
 	}

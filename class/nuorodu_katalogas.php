@@ -2,7 +2,7 @@
 
 	class NuoroduKatalogas extends Controller {
 	
-		public $main_dir, $nuoroda, $id_kategorijos = 0, $pranesimai = array(), $kategorijos;
+		public $main_dir, $nuoroda, $id_kategorijos = -1, $pranesimai = array(), $kategorijos;
 	
 		public function __construct( $main_dir ) {
 		
@@ -20,13 +20,25 @@
 		
 			$ar_pasirinkta_kategorija = false;
 			
-			if ( $this -> id_kategorijos > 0 ) {
+			if ( $this -> id_kategorijos >= 0 ) {
 			
 				$ar_pasirinkta_kategorija = true;
 			}
 		
 			return $ar_pasirinkta_kategorija;
 		}
+		
+		public function arPasirinktaEgzistuojantiKategorija() {
+		
+			$ar_pasirinkta_egzistuojanti_kategorija = false;
+			
+			if ( $this -> id_kategorijos > 0 ) {
+			
+				$ar_pasirinkta_egzistuojanti_kategorija = true;
+			}
+		
+			return $ar_pasirinkta_egzistuojanti_kategorija;
+		}		
 		
 		public function arItraukiamaNaujaNuoroda(){
 			
@@ -237,11 +249,26 @@
 		}
 		
 		public function  arSalintiKategorija() {
+	
+			$salinti = false;
 		
-			return false;
+			if ( isset ( $_POST [ 'naikinti' ] ) && ( $_POST [ 'naikinti' ] =="šalinti" ) && ( intval ( $_POST [ 'id_salinamos_kategorijos' ] ) > 0 ) ) {
+			
+				$salinti = true;
+			}
+			return $salinti;
 		}
 		
 		public function salintiKategorija() {
-		
+			
+			$id_salinamos_kategorijos = intval ( $_POST [ 'id_salinamos_kategorijos' ] );
+			
+			$kategorija = new Kategorija( 'salinama', $id_salinamos_kategorijos );
+			
+			$nuorodos_kategorijos = new NuorodosKategorijos ( null, $id_salinamos_kategorijos );
+			
+			$nuorodos_kategorijos -> salintiPagalKategorija();
+			
+			$kategorija -> salinti ( $id_salinamos_kategorijos );
 		}
 	}

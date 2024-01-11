@@ -41,4 +41,17 @@
 																														//  echo $uzklausa;
 			$this -> db -> uzklausa ( $uzklausa );
 		}
+		
+		public function salintiPagalKategorija() {
+
+			$uzklausa =
+					"
+				DELETE  FROM 
+					`nuorodos_kategorijos` 
+				WHERE 
+					`id_kategorijos`=" . $this -> id_kategoriju . "
+					";
+																														//  echo $uzklausa;
+			$this -> db -> uzklausa ( $uzklausa );
+		}		
 	}
